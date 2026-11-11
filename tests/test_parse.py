@@ -2,6 +2,8 @@ import pandas as pd
 import pytest
 
 from tennisplot.parse import (
+    _add_ages,
+    _compute_opponent_age,
     _extract_birth_date,
     _extract_match_rows,
     _rows_to_frame,
@@ -46,3 +48,22 @@ def test_missing_match_data_raises():
 
 def test_extract_birth_date():
     assert _extract_birth_date("var dob=19810926;") == pd.Timestamp("1981-09-26")
+
+def test_opponent_age_from_birth_date_female():
+    frame = _rows_to_frame(_extract_match_rows(FEMALE_JS))
+    ages = _compute_opponent_age(frame)
+    assert ages.iloc[0] == pytest.approx(18.78, abs=0.01)
+
+
+def test_opponent_age_passthrough_male():
+    frame = _rows_to_frame(_extract_match_rows(MALE_JS))
+    ages = _compute_opponent_age(frame)
+    assert ages.iloc[0] == pytest.approx(22.264202601)
+
+
+def test_add_ages_columns_and_player_age():
+    frame = _rows_to_frame(_extract_match_rows(FEMALE_JS))
+    result = _add_ages(frame, pd.Timestamp("1981-09-26"))
+    assert {"player_age", "opponent_age", "age_difference"} <= set(result.columns)
+    assert result["player_age"].iloc[0] == pytest.approx(14.09, abs=0.01)
+    assert result["age_difference"].iloc[0] == pytest.approx(14.09 - 18.78, abs=0.02)
