@@ -12,6 +12,12 @@ MATCH_COLUMNS = {
     16: "opponent_info",
 }
 
+def _extract_birth_date(player_js):
+    """Read the player's date of birth from the player-info JS file."""
+    match = re.search(r"var\s+dob\s*=\s*(\d{8})", player_js)
+    if match is None:
+        raise ValueError("Could not find the player's birth date.")
+    return pd.to_datetime(match.group(1), format="%Y%m%d")
 
 def _extract_match_rows(career_js):
     """Pull the morematchmx array out of the career JS text."""
