@@ -34,3 +34,26 @@ def _rows_to_frame(rows):
     frame = pd.DataFrame(data, columns=list(MATCH_COLUMNS.values()))
     frame["date"] = pd.to_datetime(frame["date"], format="%Y%m%d")
     return frame
+
+def _years_between(start, end):
+    """Elapsed years from start to end (works for scalars or Series)."""
+    return (end - start).dt.days / 365.25
+
+
+def _compute_opponent_age(frame):
+    """Opponent age: from a birth date (women's files) or as given (men's)."""
+    info = frame["opponent_info"]
+    is_birth_date = info.str.fullmatch(r"\d{8}")
+    birth = pd.to_datetime(info.where(is_birth_date), format="%Y%m%d", errors="coerce")
+    age_from_birth = _years_between(birth, frame["date"])
+    age_given = pd.to_numeric(info.where(~is_birth_date), errors="coerce")
+    return age_from_birth.fillna(age_given)
+
+
+def _add_ages(frame, birth_date):
+    """Add player_age, opponent_age and age_difference columns."""
+    frame = frame.copy()
+    frame["player_age"] = _years_between(birth_date, frame["date"])
+    frame["opponent_age"] = _compute_opponent_age(frame)
+    frame["age_difference"] = frame["player_age"] - frame["opponent_age"]
+    return frame
