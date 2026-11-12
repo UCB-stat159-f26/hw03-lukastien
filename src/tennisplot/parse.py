@@ -19,13 +19,20 @@ def _extract_birth_date(player_js):
         raise ValueError("Could not find the player's birth date.")
     return pd.to_datetime(match.group(1), format="%Y%m%d")
 
-def _extract_match_rows(career_js):
-    """Pull the morematchmx array out of the career JS text."""
-    marker = re.search(r"var\s+morematchmx\s*=\s*", career_js)
+def _extract_match_rows(js_text, variable="morematchmx"):
+    """Pull a match array (morematchmx by default) out of the JS text."""
+    marker = re.search(rf"var\s+{variable}\s*=\s*", js_text)
     if marker is None:
         raise ValueError("No match data found: is this a valid player?")
-    rows, _ = json.JSONDecoder().raw_decode(career_js, marker.end())
+    rows, _ = json.JSONDecoder().raw_decode(js_text, marker.end())
     return rows
+
+def _extract_recent_rows(player_js):
+    """Matches newer than the career file; empty list if there are none."""
+    try:
+        return _extract_match_rows(player_js, variable="matchmx")
+    except ValueError:
+        return []
 
 
 def _rows_to_frame(rows):
