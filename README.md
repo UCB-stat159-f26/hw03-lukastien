@@ -13,6 +13,12 @@ pip install git+https://github.com/UCB-stat159-f26/hw03-lukastien.git
 
 ## Usage
 
+In the plot, the y-axis is the player's age minus the opponent's age, so
+positive values mean the player was older than the opponent. Points are
+colored by win or loss. In a script, call `plt.show()` after
+`plot_age_gap(...)` to display the figure; in a notebook it appears
+automatically.
+
 ```python
 from tennisplot import get_player_matches, plot_age_gap
 
@@ -44,3 +50,17 @@ pip install -e ".[dev]"
 pytest
 ```
 The tests use mock data and never contact tennisabstract.com.
+
+
+## Data notes
+
+- Data comes from two tennisabstract.com files per player: the career match
+  file and the player file, which holds the birth date and any recent matches.
+- Coverage differs by player. For example, Rafael Nadal's data ends in 2018,
+  so career length and win rates should not be compared across players
+  without checking the date range.
+- Qualifying-round matches are included.
+
+
+## Reflections
+
