@@ -80,8 +80,8 @@ I knew what the right answers should be.
 
 There is less data for Rafa than for Serena. His data ends in 2018, even
 after I added the recent matches. In both plots there is a lot more blue
-(wins) than red (losses), and Serena's win rate is a bit higher: [X]% for
-Serena and [Y]% for Rafa. But since the data for Rafa is incomplete, I can't
+(wins) than red (losses), and Serena's win rate is a bit higher: 83% for
+Serena and 82% for Rafa. But since the data for Rafa is incomplete, I can't
 tell if he was just as dominant as Serena in his later years, so I can't
 claim from these plots that she was more dominant.
 
