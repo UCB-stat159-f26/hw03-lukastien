@@ -6,6 +6,7 @@ from tennisplot.parse import (
     _compute_opponent_age,
     _extract_birth_date,
     _extract_match_rows,
+    _extract_recent_rows,
     _rows_to_frame,
 )
 
@@ -67,3 +68,12 @@ def test_add_ages_columns_and_player_age():
     assert {"player_age", "opponent_age", "age_difference"} <= set(result.columns)
     assert result["player_age"].iloc[0] == pytest.approx(14.09, abs=0.01)
     assert result["age_difference"].iloc[0] == pytest.approx(14.09 - 18.78, abs=0.02)
+
+def test_extract_recent_rows_reads_matchmx():
+    js = 'var morematchmx = [["19951030"]]; var matchmx = [["20260629", "Wimbledon"]];'
+    assert _extract_recent_rows(js) == [["20260629", "Wimbledon"]]
+
+
+def test_extract_recent_rows_empty_when_missing():
+    assert _extract_recent_rows("var dob=19810926;") == []
+
