@@ -64,3 +64,30 @@ The tests use mock data and never contact tennisabstract.com.
 
 ## Reflections
 
+When I looked at the first few lines of the raw JS files, I noticed that the
+women's and men's files store the opponent column differently. In Serena's
+file it holds the opponent's date of birth (like `19770119`), and in Rafa's
+file it already holds an age (like `22.26`). My package checks whether each
+value is an eight-digit date or an age, so one function works for both. I
+also thought a player's own birth date would be in their profile, and it
+was. It's in a separate player file, so every player needs two downloads.
+
+Testing was new for me. Because of `monkeypatch`, my tests replace the real
+download function with a fake one that gives back a small piece of mock data,
+so I can test everything (parsing, ages, columns, and the error for a bad
+name) without using the internet. The mock rows came from the assignment, so
+I knew what the right answers should be.
+
+There is less data for Rafa than for Serena. His data ends in 2018, even
+after I added the recent matches. In both plots there is a lot more blue
+(wins) than red (losses), and Serena's win rate is a bit higher: [X]% for
+Serena and [Y]% for Rafa. But since the data for Rafa is incomplete, I can't
+tell if he was just as dominant as Serena in his later years, so I can't
+claim from these plots that she was more dominant.
+
+By doing Homework 3, the things I wanted to show in Homework 2 are now
+reproducible for basically any player. Homework 2 was a script for one
+player with her birth date and file paths written into the code. Now you
+just give the package a name, and it gives a clear error message if the
+player isn't found.
+
